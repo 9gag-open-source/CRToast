@@ -26,6 +26,7 @@ CGFloat CRContentWidthForAccessoryViewsWithAlignments(CGFloat fullContentWidth, 
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UILabel *label;
 @property (nonatomic, strong) UILabel *subtitleLabel;
+@property (nonatomic, strong) UIView *handleView;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 
 @end

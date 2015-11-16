@@ -120,6 +120,13 @@ static CGFloat CRCenterXForActivityIndicatorWithAlignment(CRToastAccessoryViewAl
         [self addSubview:subtitleLabel];
         self.subtitleLabel = subtitleLabel;
         
+        UIView *handleView = [[UIView alloc] initWithFrame:CGRectMake(0,0,40,4)];
+        handleView.backgroundColor = [UIColor colorWithWhite:0.6 alpha:0.5];
+        handleView.layer.cornerRadius = 2.0;
+        handleView.clipsToBounds = YES;
+        handleView.userInteractionEnabled = NO;
+        [self addSubview:handleView];
+        self.handleView = handleView;
         self.isAccessibilityElement = YES;
     }
     return self;
@@ -261,6 +268,17 @@ static CGFloat CRCenterXForActivityIndicatorWithAlignment(CRToastAccessoryViewAl
             };
         }
     }
+    
+    if(self.toast.showHandle){
+        self.handleView.center = (CGPoint) {
+            .x = CGRectGetMidX(self.frame),
+            .y = CGRectGetHeight(self.frame) - preferredPadding - CGRectGetHeight(self.handleView.frame),
+        };
+        self.handleView.hidden = NO;
+    } else {
+        self.handleView.hidden = YES;
+    }
+    
 }
 
 #pragma mark - Overrides

@@ -232,6 +232,8 @@ NSString *const kCRToastAutorotateKey                       = @"kCRToastAutorota
 NSString *const kCRToastIdentifierKey                       = @"kCRToastIdentifierKey";
 NSString *const kCRToastCaptureDefaultWindowKey             = @"kCRToastCaptureDefaultWindowKey";
 
+NSString *const kCRToastShowHandleKey                       = @"kCRToastShowHandleKey";
+
 #pragma mark - Option Defaults
 
 static CRToastType                   kCRNotificationTypeDefault             = CRToastTypeStatusBar;
@@ -289,6 +291,8 @@ static BOOL                          kCRAutoRotateDefault                   = YE
 static BOOL                          kCRCaptureDefaultWindowDefault         = YES;
 
 static NSDictionary *                kCRToastKeyClassMap                    = nil;
+
+static BOOL                          kCRShowHandleDefault                   = YES;
 
 @interface CRToast ()
 @property (nonatomic, readonly) BOOL snapshotWindow;
@@ -363,7 +367,9 @@ static NSDictionary *                kCRToastKeyClassMap                    = ni
                                 
                                 kCRToastAutorotateKey                       : NSStringFromClass([@(kCRAutoRotateDefault) class]),
                                 
-                                kCRToastCaptureDefaultWindowKey             : NSStringFromClass([@(kCRCaptureDefaultWindowDefault) class])
+                                kCRToastCaptureDefaultWindowKey             : NSStringFromClass([@(kCRCaptureDefaultWindowDefault) class]),
+                                
+                                kCRToastShowHandleKey                       : NSStringFromClass([@(kCRShowHandleDefault) class]),
                                 };
     }
 }
@@ -436,6 +442,8 @@ static NSDictionary *                kCRToastKeyClassMap                    = ni
     if (defaultOptions[kCRToastAutorotateKey])                      kCRAutoRotateDefault                    = [defaultOptions[kCRToastAutorotateKey] boolValue];
 
     if (defaultOptions[kCRToastCaptureDefaultWindowKey])            kCRCaptureDefaultWindowDefault          = [defaultOptions[kCRToastCaptureDefaultWindowKey] boolValue];
+    
+    if (defaultOptions[kCRToastShowHandleKey])                      kCRShowHandleDefault                    = [defaultOptions[kCRToastShowHandleKey] boolValue];
 }
 
 #pragma mark - Notification View Helpers
@@ -702,6 +710,10 @@ static NSDictionary *                kCRToastKeyClassMap                    = ni
 
 - (BOOL)showActivityIndicator {
     return _options[kCRToastShowActivityIndicatorKey] ? [_options[kCRToastShowActivityIndicatorKey] boolValue] : kCRShowActivityIndicatorDefault;
+}
+
+- (BOOL)showHandle {
+    return _options[kCRToastShowHandleKey] ? [_options[kCRToastShowHandleKey] boolValue] : kCRShowHandleDefault;
 }
 
 - (UIActivityIndicatorViewStyle)activityIndicatorViewStyle {

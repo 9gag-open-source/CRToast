@@ -365,6 +365,11 @@ extern NSString *const kCRToastIdentifierKey;
  */
 extern NSString *const kCRToastCaptureDefaultWindowKey;
 
+/**
+ BOOL setting whether the CRToast should show a handle at the bottom.
+ */
+extern NSString *const kCRToastShowHandle;
+
 #pragma mark - CRToast Interface
 @interface CRToast : NSObject <UIGestureRecognizerDelegate>
 
@@ -441,6 +446,7 @@ extern NSString *const kCRToastCaptureDefaultWindowKey;
 @property (nonatomic, readonly) UIActivityIndicatorViewStyle activityIndicatorViewStyle;
 @property (nonatomic, readonly) CRToastAccessoryViewAlignment activityViewAlignment;
 @property (nonatomic, readonly) BOOL showActivityIndicator;
+@property (nonatomic, readonly) BOOL showHandle;
 @property (nonatomic, readonly) BOOL forceUserInteraction;
 
 @property (nonatomic, readonly) CGVector inGravityDirection;
