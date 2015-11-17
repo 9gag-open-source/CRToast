@@ -217,6 +217,8 @@ NSString *const kCRToastStatusBarStyleKey                   = @"kCRToastStatusBa
 NSString *const kCRToastBackgroundColorKey                  = @"kCRToastBackgroundColorKey";
 NSString *const kCRToastBackgroundViewKey                   = @"kCRToastBackgroundViewKey";
 NSString *const kCRToastImageKey                            = @"kCRToastImageKey";
+NSString *const kCRToastImageUrlKey                         = @"kCRToastImageUrlKey";
+NSString *const kCRToastImagePlaceholderKey                 = @"kCRToastImagePlaceholderKey";
 NSString *const kCRToastImageContentModeKey                 = @"kCRToastImageContentModeKey";
 NSString *const kCRToastImageAlignmentKey                   = @"kCRToastImageAlignmentKey";
 NSString *const kCRToastImageTintKey                        = @"kCRToastImageTintKey";
@@ -276,6 +278,8 @@ static UIStatusBarStyle              kCRStatusBarStyleDefault               = UI
 static UIColor  *                    kCRBackgroundColorDefault              = nil;
 static UIView   *                    kCRBackgroundView                      = nil;
 static UIImage  *                    kCRImageDefault                        = nil;
+static NSURL    *                    kCRImageUrlDefault                     = nil;
+static UIImage  *                    kCRImagePlaceholderDefault             = nil;
 static UIViewContentMode             kCRImageContentModeDefault             = UIViewContentModeCenter;
 static CRToastAccessoryViewAlignment kCRImageAlignmentDefault               = CRToastAccessoryViewAlignmentLeft;
 static UIColor  *                    kCRImageTintDefault                    = nil;
@@ -353,6 +357,8 @@ static BOOL                          kCRShowHandleDefault                   = YE
                                 kCRToastBackgroundColorKey                  : NSStringFromClass([UIColor class]),
                                 kCRToastBackgroundViewKey                   : NSStringFromClass([UIView class]),
                                 kCRToastImageKey                            : NSStringFromClass([UIImage class]),
+                                kCRToastImageUrlKey                         : NSStringFromClass([NSURL class]),
+                                kCRToastImagePlaceholderKey                 : NSStringFromClass([UIImage class]),
                                 kCRToastImageContentModeKey                 : NSStringFromClass([@(kCRImageContentModeDefault) class]),
                                 kCRToastImageAlignmentKey                   : NSStringFromClass([@(kCRImageAlignmentDefault) class]),
                                 kCRToastImageTintKey                        : NSStringFromClass([UIColor class]),
@@ -429,6 +435,8 @@ static BOOL                          kCRShowHandleDefault                   = YE
     if (defaultOptions[kCRToastBackgroundColorKey])                 kCRBackgroundColorDefault               = defaultOptions[kCRToastBackgroundColorKey];
     if (defaultOptions[kCRToastBackgroundViewKey])                  kCRBackgroundView                       = defaultOptions[kCRToastBackgroundViewKey];
     if (defaultOptions[kCRToastImageKey])                           kCRImageDefault                         = defaultOptions[kCRToastImageKey];
+    if (defaultOptions[kCRToastImageUrlKey])                        kCRImageUrlDefault                      = defaultOptions[kCRToastImageUrlKey];
+    if (defaultOptions[kCRToastImagePlaceholderKey])                kCRImagePlaceholderDefault              = defaultOptions[kCRToastImagePlaceholderKey];
     if (defaultOptions[kCRToastImageContentModeKey])                kCRImageContentModeDefault              = [defaultOptions[kCRToastImageContentModeKey] integerValue];
     if (defaultOptions[kCRToastImageAlignmentKey])                  kCRImageAlignmentDefault                = [defaultOptions[kCRToastImageAlignmentKey] integerValue];
     if (defaultOptions[kCRToastImageTintKey])                       kCRImageTintDefault                     = defaultOptions[kCRToastImageTintKey];
@@ -694,6 +702,14 @@ static BOOL                          kCRShowHandleDefault                   = YE
 
 - (UIImage *)image {
     return _options[kCRToastImageKey] ?: kCRImageDefault;
+}
+
+- (NSURL *)imageUrl {
+    return _options[kCRToastImageUrlKey] ?: kCRImageUrlDefault;
+}
+
+- (UIImage *)imagePlaceholder {
+    return _options[kCRToastImagePlaceholderKey] ?: kCRImagePlaceholderDefault;
 }
 
 - (UIViewContentMode)imageContentMode {

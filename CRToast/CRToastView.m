@@ -6,6 +6,7 @@
 #import "CRToastView.h"
 #import "CRToast.h"
 #import "CRToastLayoutHelpers.h"
+#import "SDWebImageManager.h"
 
 @interface CRToastView ()
 @end
@@ -135,8 +136,9 @@ static CGFloat CRCenterXForActivityIndicatorWithAlignment(CRToastAccessoryViewAl
 - (void)layoutSubviews {
     [super layoutSubviews];
     CGRect contentFrame = self.bounds;
-    CGSize imageSize = self.imageView.image.size;
+    CGSize imageSize = (!self.imageView.image && self.toast.imagePlaceholder)? self.toast.imagePlaceholder.size : self.imageView.image.size;
     CGFloat preferredPadding = self.toast.preferredPadding;
+    CGFloat yOffset = 8;
     
     CGFloat statusBarYOffset = self.toast.displayUnderStatusBar ? (CRGetStatusBarHeight()+CRStatusBarViewUnderStatusBarYOffsetAdjustment) : 0;
     contentFrame.size.height = CGRectGetHeight(contentFrame) - statusBarYOffset;
@@ -145,13 +147,13 @@ static CGFloat CRCenterXForActivityIndicatorWithAlignment(CRToastAccessoryViewAl
     
     CGFloat imageXOffset = CRImageViewFrameXOffsetForAlignment(self.toast.imageAlignment, preferredPadding, contentFrame.size);
     self.imageView.frame = CGRectMake(imageXOffset,
-                                      statusBarYOffset,
+                                      statusBarYOffset+yOffset,
                                       imageSize.width == 0 ?
                                       0 :
                                       CGRectGetHeight(contentFrame),
                                       imageSize.height == 0 ?
                                       0 :
-                                      CGRectGetHeight(contentFrame));
+                                      CGRectGetHeight(contentFrame)-yOffset*2);
     
     CGFloat imageWidth = imageSize.width == 0 ? 0 : CGRectGetMaxX(_imageView.frame);
     CGFloat x = CRContentXOffsetForViewAlignmentAndWidth(self.toast.imageAlignment, imageXOffset, imageWidth, preferredPadding);
@@ -301,11 +303,17 @@ static CGFloat CRCenterXForActivityIndicatorWithAlignment(CRToastAccessoryViewAl
         _subtitleLabel.shadowOffset = toast.subtitleTextShadowOffset;
         _subtitleLabel.shadowColor = toast.subtitleTextShadowColor;
     }
-    if (toast.imageTint) {
-        _imageView.image = [toast.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
-        _imageView.tintColor = toast.imageTint;
+    if(!toast.image && toast.imagePlaceholder){
+        [_imageView sd_setImageWithURL:toast.imageUrl
+                      placeholderImage:toast.imagePlaceholder
+                             completed:NULL];
     } else {
-        _imageView.image = toast.image;
+        if (toast.imageTint) {
+            _imageView.image = [toast.image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+            _imageView.tintColor = toast.imageTint;
+        } else {
+            _imageView.image = toast.image;
+        }
     }
     _imageView.contentMode = toast.imageContentMode;
     _activityIndicator.activityIndicatorViewStyle = toast.activityIndicatorViewStyle;
