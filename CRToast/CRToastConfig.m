@@ -235,6 +235,7 @@ NSString *const kCRToastIdentifierKey                       = @"kCRToastIdentifi
 NSString *const kCRToastCaptureDefaultWindowKey             = @"kCRToastCaptureDefaultWindowKey";
 
 NSString *const kCRToastShowHandleKey                       = @"kCRToastShowHandleKey";
+NSString *const kCRToastQueueToastKey                       = @"kCRToastQueueToastKey";
 
 #pragma mark - Option Defaults
 
@@ -297,6 +298,7 @@ static BOOL                          kCRCaptureDefaultWindowDefault         = YE
 static NSDictionary *                kCRToastKeyClassMap                    = nil;
 
 static BOOL                          kCRShowHandleDefault                   = YES;
+static BOOL                          kCRQueueToastDefault                   = YES;
 
 @interface CRToast ()
 @property (nonatomic, readonly) BOOL snapshotWindow;
@@ -376,6 +378,7 @@ static BOOL                          kCRShowHandleDefault                   = YE
                                 kCRToastCaptureDefaultWindowKey             : NSStringFromClass([@(kCRCaptureDefaultWindowDefault) class]),
                                 
                                 kCRToastShowHandleKey                       : NSStringFromClass([@(kCRShowHandleDefault) class]),
+                                kCRToastQueueToastKey                       : NSStringFromClass([@(kCRQueueToastDefault) class]),
                                 };
     }
 }
@@ -452,6 +455,7 @@ static BOOL                          kCRShowHandleDefault                   = YE
     if (defaultOptions[kCRToastCaptureDefaultWindowKey])            kCRCaptureDefaultWindowDefault          = [defaultOptions[kCRToastCaptureDefaultWindowKey] boolValue];
     
     if (defaultOptions[kCRToastShowHandleKey])                      kCRShowHandleDefault                    = [defaultOptions[kCRToastShowHandleKey] boolValue];
+    if (defaultOptions[kCRToastQueueToastKey])                      kCRQueueToastDefault                    = [defaultOptions[kCRToastQueueToastKey] boolValue];
 }
 
 #pragma mark - Notification View Helpers
@@ -730,6 +734,10 @@ static BOOL                          kCRShowHandleDefault                   = YE
 
 - (BOOL)showHandle {
     return _options[kCRToastShowHandleKey] ? [_options[kCRToastShowHandleKey] boolValue] : kCRShowHandleDefault;
+}
+
+- (BOOL)queueToast {
+    return _options[kCRToastQueueToastKey] ? [_options[kCRToastQueueToastKey] boolValue] : kCRQueueToastDefault;
 }
 
 - (UIActivityIndicatorViewStyle)activityIndicatorViewStyle {

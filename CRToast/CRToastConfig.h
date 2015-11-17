@@ -311,6 +311,16 @@ extern NSString *const kCRToastBackgroundViewKey;
 extern NSString *const kCRToastImageKey;
 
 /**
+ The image from an image url to be shown on the left side of the notification. Expects type `NSURL`.
+ */
+extern NSString *const kCRToastImageUrlKey;
+
+/**
+ The placeholder image to be shown on the left side of the notification. Expects type `UIImage`. Needs to use with kCRToastImageUrlKey
+ */
+extern NSString *const kCRToastImagePlaceholderKey;
+
+/**
  The image content mode to use for `kCRToastImageKey` image. Exptects type `UIViewContentMode`
  */
 extern NSString *const kCRToastImageContentModeKey;
@@ -368,7 +378,12 @@ extern NSString *const kCRToastCaptureDefaultWindowKey;
 /**
  BOOL setting whether the CRToast should show a handle at the bottom.
  */
-extern NSString *const kCRToastShowHandle;
+extern NSString *const kCRToastShowHandleKey;
+
+/**
+ BOOL setting whether the CRToast should queue up or dispaly immediately.
+ */
+extern NSString *const kCRToastQueueToastKey;
 
 #pragma mark - CRToast Interface
 @interface CRToast : NSObject <UIGestureRecognizerDelegate>
@@ -440,6 +455,8 @@ extern NSString *const kCRToastShowHandle;
 @property (nonatomic, readonly) UIColor *backgroundColor;
 @property (nonatomic, readonly) UIView *backgroundView;
 @property (nonatomic, readonly) UIImage *image;
+@property (nonatomic, readonly) NSURL *imageUrl;
+@property (nonatomic, readonly) UIImage *imagePlaceholder;
 @property (nonatomic, readonly) UIViewContentMode imageContentMode;
 @property (nonatomic, readonly) CRToastAccessoryViewAlignment imageAlignment;
 @property (nonatomic, readonly) UIColor *imageTint;
@@ -447,6 +464,7 @@ extern NSString *const kCRToastShowHandle;
 @property (nonatomic, readonly) CRToastAccessoryViewAlignment activityViewAlignment;
 @property (nonatomic, readonly) BOOL showActivityIndicator;
 @property (nonatomic, readonly) BOOL showHandle;
+@property (nonatomic, readonly) BOOL queueToast;
 @property (nonatomic, readonly) BOOL forceUserInteraction;
 
 @property (nonatomic, readonly) CGVector inGravityDirection;

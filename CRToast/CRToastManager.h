@@ -60,7 +60,7 @@
  Immidiately begins the (un)animated dismisal of a notification and canceling all others
  @param animated If YES the notification will dismiss with its configure animation, otherwise it will immidiately disappear
  */
-+ (void)dismissAllNotifications:(BOOL)animated;
+//+ (void)dismissAllNotifications:(BOOL)animated;
 
 /**
  Immidiately begins the (un)animated dismisal of a notification and removing of all notifications 
