@@ -57,17 +57,17 @@ typedef void (^CRToastAnimationStepBlock)(void);
 }
 
 
-+ (void)dismissNotification:(BOOL)animated {
-    [[self manager] dismissNotification:animated];
-}
+//+ (void)dismissNotification:(BOOL)animated {
+//    [[self manager] dismissNotification:animated];
+//}
 
 + (void)dismissAllNotifications:(BOOL)animated {
     [[self manager] dismissAllNotifications:animated];
 }
 
-+ (void)dismissAllNotificationsWithIdentifier:(NSString *)identifer animated:(BOOL)animated {
-    [[self manager] dismissAllNotificationsWithIdentifier:identifer animated:animated];
-}
+//+ (void)dismissAllNotificationsWithIdentifier:(NSString *)identifer animated:(BOOL)animated {
+//    [[self manager] dismissAllNotificationsWithIdentifier:identifer animated:animated];
+//}
 
 + (NSArray *)notificationIdentifiersInQueue {
     return [[self manager] notificationIdentifiersInQueue];
@@ -308,8 +308,12 @@ CRToastAnimationStepBlock CRToastOutwardAnimationsSetupBlock(CRToastManager *wea
     rootViewController.toastView = notificationView;
 //    self.statusBarView = statusBarView;
     
-    for (UIView *subview in _notificationWindow.rootViewController.view.subviews) {
-        subview.userInteractionEnabled = NO;
+    for (UIView *subview in notificationView.subviews) {
+        if([subview isKindOfClass:[UIButton class]]){
+            
+        } else {
+            subview.userInteractionEnabled = NO;
+        }
     }
     
     _notificationWindow.rootViewController.view.userInteractionEnabled = YES;

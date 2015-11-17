@@ -16,8 +16,18 @@
  @param imageAlignment             alignment of image. Only used if @c showingImage is set to @c YES
  @param showingActivityIndicator   @c YES if an activity indicator is being shown and should be accounted for. @c NO otherwise.
  @param activityIndicatorAlignment alignment of activity indicator. Only used if @c showingActivityIndicator is set to @c YES
+ @param showingClose               @c YES if an close button is being shown and should be accounted for. @c NO otherwise.
+ @param activityIndicatorAlignment alignment of close button. Only used if @c showingClose is set to @c YES
  */
-CGFloat CRContentWidthForAccessoryViewsWithAlignments(CGFloat fullContentWidth, CGFloat fullContentHeight, CGFloat preferredPadding, BOOL showingImage, CRToastAccessoryViewAlignment imageAlignment, BOOL showingActivityIndicator, CRToastAccessoryViewAlignment activityIndicatorAlignment);
+CGFloat CRContentWidthForAccessoryViewsWithAlignments(CGFloat fullContentWidth,
+                                                      CGFloat fullContentHeight,
+                                                      CGFloat preferredPadding,
+                                                      BOOL showingImage,
+                                                      CRToastAccessoryViewAlignment imageAlignment,
+                                                      BOOL showingActivityIndicator,
+                                                      CRToastAccessoryViewAlignment activityIndicatorAlignment,
+                                                      BOOL showingClose,
+                                                      CRToastAccessoryViewAlignment closeAlignment);
 
 @interface CRToastView : UIView
 @property (nonatomic, weak) CRToast *toast;
@@ -26,7 +36,7 @@ CGFloat CRContentWidthForAccessoryViewsWithAlignments(CGFloat fullContentWidth, 
 @property (nonatomic, strong) UIImageView *imageView;
 @property (nonatomic, strong) UILabel *label;
 @property (nonatomic, strong) UILabel *subtitleLabel;
-@property (nonatomic, strong) UIView *handleView;
+@property (nonatomic, strong) UIButton *closeButton;
 @property (nonatomic, strong) UIActivityIndicatorView *activityIndicator;
 
 @end

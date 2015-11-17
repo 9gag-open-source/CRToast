@@ -54,13 +54,13 @@
  @param animated If YES the notification will dismiss with its configure animation, otherwise it will immidiately disappear
  */
 
-+ (void)dismissNotification:(BOOL)animated;
+//+ (void)dismissNotification:(BOOL)animated;
 
 /**
  Immidiately begins the (un)animated dismisal of a notification and canceling all others
  @param animated If YES the notification will dismiss with its configure animation, otherwise it will immidiately disappear
  */
-//+ (void)dismissAllNotifications:(BOOL)animated;
++ (void)dismissAllNotifications:(BOOL)animated;
 
 /**
  Immidiately begins the (un)animated dismisal of a notification and removing of all notifications 
@@ -68,7 +68,7 @@
  @param identifier `kCRToastIdentiferKey` specified for the toasts in queue. If no toasts are found with that identifier, none will be removed.
  @param animated   If YES the notification will dismiss with its configure animation, otherwise it will immidiately disappear
  */
-+ (void)dismissAllNotificationsWithIdentifier:(NSString *)identifer animated:(BOOL)animated;
+//+ (void)dismissAllNotificationsWithIdentifier:(NSString *)identifer animated:(BOOL)animated;
 
 /**
  Gets the array of notification identifiers currently in the @c CRToastManager notifications queue.

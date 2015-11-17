@@ -225,6 +225,8 @@ NSString *const kCRToastImageTintKey                        = @"kCRToastImageTin
 NSString *const kCRToastShowActivityIndicatorKey            = @"kCRToastShowActivityIndicatorKey";
 NSString *const kCRToastActivityIndicatorViewStyleKey       = @"kCRToastActivityIndicatorViewStyleKey";
 NSString *const kCRToastActivityIndicatorAlignmentKey       = @"kCRToastActivityIndicatorAlignmentKey";
+NSString *const kCRToastShowCloseKey                        = @"kCRToastShowCloseKey";
+NSString *const kCRToastCloseAlignmentKey                   = @"kCRToastCloseAlignmentKey";
 
 NSString *const kCRToastInteractionRespondersKey            = @"kCRToastInteractionRespondersKey";
 NSString *const kCRToastForceUserInteractionKey             = @"kCRToastForceUserInteractionKey";
@@ -234,7 +236,6 @@ NSString *const kCRToastAutorotateKey                       = @"kCRToastAutorota
 NSString *const kCRToastIdentifierKey                       = @"kCRToastIdentifierKey";
 NSString *const kCRToastCaptureDefaultWindowKey             = @"kCRToastCaptureDefaultWindowKey";
 
-NSString *const kCRToastShowHandleKey                       = @"kCRToastShowHandleKey";
 NSString *const kCRToastQueueToastKey                       = @"kCRToastQueueToastKey";
 
 #pragma mark - Option Defaults
@@ -287,6 +288,8 @@ static UIColor  *                    kCRImageTintDefault                    = ni
 static BOOL                          kCRShowActivityIndicatorDefault        = NO;
 static UIActivityIndicatorViewStyle  kCRActivityIndicatorViewStyleDefault   = UIActivityIndicatorViewStyleWhite;
 static CRToastAccessoryViewAlignment kCRActivityIndicatorAlignmentDefault   = CRToastAccessoryViewAlignmentLeft;
+static BOOL                          kCRShowCloseDefault                    = YES;
+static CRToastAccessoryViewAlignment kCRCloseAlignmentDefault               = CRToastAccessoryViewAlignmentRight;
 
 static NSArray  *                    kCRInteractionResponders               = nil;
 static BOOL                          kCRForceUserInteractionDefault         = NO;
@@ -297,7 +300,6 @@ static BOOL                          kCRCaptureDefaultWindowDefault         = YE
 
 static NSDictionary *                kCRToastKeyClassMap                    = nil;
 
-static BOOL                          kCRShowHandleDefault                   = YES;
 static BOOL                          kCRQueueToastDefault                   = YES;
 
 @interface CRToast ()
@@ -367,6 +369,8 @@ static BOOL                          kCRQueueToastDefault                   = YE
                                 kCRToastShowActivityIndicatorKey            : NSStringFromClass([@(kCRShowActivityIndicatorDefault) class]),
                                 kCRToastActivityIndicatorViewStyleKey       : NSStringFromClass([@(kCRActivityIndicatorViewStyleDefault) class]),
                                 kCRToastActivityIndicatorAlignmentKey       : NSStringFromClass([@(kCRActivityIndicatorAlignmentDefault) class]),
+                                kCRToastShowCloseKey                        : NSStringFromClass([@(kCRShowCloseDefault) class]),
+                                kCRToastCloseAlignmentKey                   : NSStringFromClass([@(kCRCloseAlignmentDefault) class]),
                                 
                                 kCRToastInteractionRespondersKey            : NSStringFromClass([NSArray class]),
                                 kCRToastForceUserInteractionKey             : NSStringFromClass([@(kCRForceUserInteractionDefault) class]),
@@ -377,7 +381,6 @@ static BOOL                          kCRQueueToastDefault                   = YE
                                 
                                 kCRToastCaptureDefaultWindowKey             : NSStringFromClass([@(kCRCaptureDefaultWindowDefault) class]),
                                 
-                                kCRToastShowHandleKey                       : NSStringFromClass([@(kCRShowHandleDefault) class]),
                                 kCRToastQueueToastKey                       : NSStringFromClass([@(kCRQueueToastDefault) class]),
                                 };
     }
@@ -446,6 +449,8 @@ static BOOL                          kCRQueueToastDefault                   = YE
     if (defaultOptions[kCRToastShowActivityIndicatorKey])           kCRShowActivityIndicatorDefault         = [defaultOptions[kCRToastShowActivityIndicatorKey] boolValue];
     if (defaultOptions[kCRToastActivityIndicatorViewStyleKey])      kCRActivityIndicatorViewStyleDefault    = [defaultOptions[kCRToastActivityIndicatorViewStyleKey] integerValue];
     if (defaultOptions[kCRToastActivityIndicatorAlignmentKey])      kCRActivityIndicatorAlignmentDefault    = [defaultOptions[kCRToastActivityIndicatorAlignmentKey] integerValue];
+    if (defaultOptions[kCRToastShowCloseKey])                       kCRShowCloseDefault                     = [defaultOptions[kCRToastShowCloseKey] boolValue];
+    if (defaultOptions[kCRToastCloseAlignmentKey])                  kCRCloseAlignmentDefault                = [defaultOptions[kCRToastCloseAlignmentKey] integerValue];
     
     if (defaultOptions[kCRToastInteractionRespondersKey])           kCRInteractionResponders                = defaultOptions[kCRToastInteractionRespondersKey];
     if (defaultOptions[kCRToastForceUserInteractionKey])            kCRForceUserInteractionDefault          = [defaultOptions[kCRToastForceUserInteractionKey] boolValue];
@@ -454,7 +459,6 @@ static BOOL                          kCRQueueToastDefault                   = YE
 
     if (defaultOptions[kCRToastCaptureDefaultWindowKey])            kCRCaptureDefaultWindowDefault          = [defaultOptions[kCRToastCaptureDefaultWindowKey] boolValue];
     
-    if (defaultOptions[kCRToastShowHandleKey])                      kCRShowHandleDefault                    = [defaultOptions[kCRToastShowHandleKey] boolValue];
     if (defaultOptions[kCRToastQueueToastKey])                      kCRQueueToastDefault                    = [defaultOptions[kCRToastQueueToastKey] boolValue];
 }
 
@@ -508,7 +512,7 @@ static BOOL                          kCRQueueToastDefault                   = YE
 
 - (void)swipeGestureRecognizerSwiped:(CRToastSwipeGestureRecognizer*)swipeGestureRecognizer {
     if (swipeGestureRecognizer.automaticallyDismiss) {
-        [CRToastManager dismissNotification:YES];
+        [CRToastManager dismissAllNotifications:YES];
     }
     
     if (swipeGestureRecognizer.block) {
@@ -518,7 +522,7 @@ static BOOL                          kCRQueueToastDefault                   = YE
 
 - (void)tapGestureRecognizerTapped:(CRToastTapGestureRecognizer*)tapGestureRecognizer {
     if (tapGestureRecognizer.automaticallyDismiss) {
-        [CRToastManager dismissNotification:YES];
+        [CRToastManager dismissAllNotifications:YES];
     }
     
     if (tapGestureRecognizer.block) {
@@ -732,8 +736,8 @@ static BOOL                          kCRQueueToastDefault                   = YE
     return _options[kCRToastShowActivityIndicatorKey] ? [_options[kCRToastShowActivityIndicatorKey] boolValue] : kCRShowActivityIndicatorDefault;
 }
 
-- (BOOL)showHandle {
-    return _options[kCRToastShowHandleKey] ? [_options[kCRToastShowHandleKey] boolValue] : kCRShowHandleDefault;
+- (BOOL)showClose {
+    return _options[kCRToastShowCloseKey] ? [_options[kCRToastShowCloseKey] boolValue] : kCRShowCloseDefault;
 }
 
 - (BOOL)queueToast {
@@ -746,6 +750,10 @@ static BOOL                          kCRQueueToastDefault                   = YE
 
 - (CRToastAccessoryViewAlignment)activityViewAlignment {
     return _options[kCRToastActivityIndicatorAlignmentKey] ? [_options[kCRToastActivityIndicatorAlignmentKey] integerValue] : kCRActivityIndicatorAlignmentDefault;
+}
+
+- (CRToastAccessoryViewAlignment)closeAlignment {
+    return _options[kCRToastCloseAlignmentKey] ? [_options[kCRToastCloseAlignmentKey] integerValue] : kCRCloseAlignmentDefault;
 }
 
 - (NSInteger)textMaxNumberOfLines {

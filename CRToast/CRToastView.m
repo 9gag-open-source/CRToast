@@ -56,26 +56,31 @@ CGFloat CRContentWidthForAccessoryViewsWithAlignments(CGFloat fullContentWidth,
                                                       BOOL showingImage,
                                                       CRToastAccessoryViewAlignment imageAlignment,
                                                       BOOL showingActivityIndicator,
-                                                      CRToastAccessoryViewAlignment activityIndicatorAlignment)
+                                                      CRToastAccessoryViewAlignment activityIndicatorAlignment,
+                                                      BOOL showingClose,
+                                                      CRToastAccessoryViewAlignment closeAlignment)
 {
     CGFloat width = fullContentWidth;
     
-    if (imageAlignment == activityIndicatorAlignment && showingActivityIndicator && showingImage) {
+    if ((imageAlignment == activityIndicatorAlignment && showingActivityIndicator && showingImage)
+        || (imageAlignment == closeAlignment && showingImage && showingClose)
+        || (activityIndicatorAlignment == closeAlignment && showingActivityIndicator && showingClose)) {
         return fullContentWidth;
     }
     
     width -= CRToastWidthOfViewWithAlignment(fullContentHeight, showingImage, imageAlignment, preferredPadding);
     width -= CRToastWidthOfViewWithAlignment(fullContentHeight, showingActivityIndicator, activityIndicatorAlignment, preferredPadding);
+    width -= CRToastWidthOfViewWithAlignment(fullContentHeight, showingClose, closeAlignment, preferredPadding);
         
-    if (!showingImage && !showingActivityIndicator) {
-        width -= (kCRStatusBarViewNoImageLeftContentInset + kCRStatusBarViewNoImageRightContentInset);
-        width -= (preferredPadding + preferredPadding);
+    if (!showingImage && !showingActivityIndicator && !showingClose) {
+        width -= (kCRStatusBarViewNoImageLeftContentInset + kCRStatusBarViewNoImageRightContentInset + kCRStatusBarViewNoImageRightContentInset);
+        width -= (preferredPadding + preferredPadding + preferredPadding );
     }
     
     return width;
 }
 
-static CGFloat CRCenterXForActivityIndicatorWithAlignment(CRToastAccessoryViewAlignment alignment, CGFloat viewWidth, CGFloat contentWidth, CGFloat preferredPadding) {
+static CGFloat CRCenterXForViewWithAlignment(CRToastAccessoryViewAlignment alignment, CGFloat viewWidth, CGFloat contentWidth, CGFloat preferredPadding) {
     CGFloat center = 0;
     CGFloat offset = viewWidth / 2 + preferredPadding;
     
@@ -121,14 +126,23 @@ static CGFloat CRCenterXForActivityIndicatorWithAlignment(CRToastAccessoryViewAl
         [self addSubview:subtitleLabel];
         self.subtitleLabel = subtitleLabel;
         
-        UIView *handleView = [[UIView alloc] initWithFrame:CGRectMake(0,0,40,4)];
-        handleView.backgroundColor = [UIColor colorWithWhite:0.6 alpha:0.5];
-        handleView.layer.cornerRadius = 2.0;
-        handleView.clipsToBounds = YES;
-        handleView.userInteractionEnabled = NO;
-        [self addSubview:handleView];
-        self.handleView = handleView;
-        self.isAccessibilityElement = YES;
+        UIButton *closeButton = [[UIButton alloc] init];
+        closeButton.alpha = 0.6;
+        [closeButton setImage:[UIImage imageNamed:@"ImageCRToastClose"] forState:UIControlStateNormal];
+        closeButton.imageView.contentMode = UIViewContentModeCenter;
+        [closeButton addTarget:self action:@selector(didTapCloseButton:) forControlEvents:UIControlEventTouchUpInside];
+        closeButton.frame = CGRectMake(0,0,44,44);
+        [self addSubview:closeButton];
+        self.closeButton = closeButton;
+        
+//        UIView *handleView = [[UIView alloc] initWithFrame:CGRectMake(0,0,40,4)];
+//        handleView.backgroundColor = [UIColor colorWithWhite:0.6 alpha:0.5];
+//        handleView.layer.cornerRadius = 2.0;
+//        handleView.clipsToBounds = YES;
+//        handleView.userInteractionEnabled = NO;
+//        [self addSubview:handleView];
+//        self.handleView = handleView;
+//        self.isAccessibilityElement = YES;
     }
     return self;
 }
@@ -159,7 +173,7 @@ static CGFloat CRCenterXForActivityIndicatorWithAlignment(CRToastAccessoryViewAl
     CGFloat x = CRContentXOffsetForViewAlignmentAndWidth(self.toast.imageAlignment, imageXOffset, imageWidth, preferredPadding);
     
     if (self.toast.showActivityIndicator) {
-        CGFloat centerX = CRCenterXForActivityIndicatorWithAlignment(self.toast.activityViewAlignment, CGRectGetHeight(contentFrame), CGRectGetWidth(contentFrame), preferredPadding);
+        CGFloat centerX = CRCenterXForViewWithAlignment(self.toast.activityViewAlignment, CGRectGetHeight(contentFrame), CGRectGetWidth(contentFrame), preferredPadding);
         self.activityIndicator.center = CGPointMake(centerX,
                                      CGRectGetMidY(contentFrame) + statusBarYOffset);
         
@@ -167,6 +181,19 @@ static CGFloat CRCenterXForActivityIndicatorWithAlignment(CRToastAccessoryViewAl
         x = MAX(CRContentXOffsetForViewAlignmentAndWidth(self.toast.activityViewAlignment, imageXOffset, CGRectGetHeight(contentFrame), preferredPadding), x);
 
         [self bringSubviewToFront:self.activityIndicator];
+    }
+    
+    if (self.toast.showClose) {
+        CGFloat centerX = CRCenterXForViewWithAlignment(self.toast.closeAlignment, CGRectGetHeight(contentFrame), CGRectGetWidth(contentFrame), preferredPadding);
+        self.closeButton.center = CGPointMake(centerX,
+                                              CGRectGetMidY(contentFrame) + statusBarYOffset);
+        
+        x = MAX(CRContentXOffsetForViewAlignmentAndWidth(self.toast.closeAlignment, imageXOffset, CGRectGetHeight(contentFrame), preferredPadding), x);
+        
+        [self bringSubviewToFront:self.closeButton];
+        self.closeButton.hidden = NO;
+    } else {
+        self.closeButton.hidden = YES;
     }
     
     BOOL showingImage = imageSize.width > 0;
@@ -177,7 +204,9 @@ static CGFloat CRCenterXForActivityIndicatorWithAlignment(CRToastAccessoryViewAl
                                                                   showingImage,
                                                                   self.toast.imageAlignment,
                                                                   self.toast.showActivityIndicator,
-                                                                  self.toast.activityViewAlignment);
+                                                                  self.toast.activityViewAlignment,
+                                                                  self.toast.showClose,
+                                                                  self.toast.closeAlignment);
     
     if (self.toast.subtitleText == nil) {
         self.label.frame = CGRectMake(x,
@@ -201,13 +230,13 @@ static CGFloat CRCenterXForActivityIndicatorWithAlignment(CRToastAccessoryViewAl
         
         self.label.frame = CGRectMake(x,
                                       offset+statusBarYOffset,
-                                      CGRectGetWidth(contentFrame)-x-kCRStatusBarViewNoImageRightContentInset,
+                                      width,
                                       height);
         
         
         self.subtitleLabel.frame = CGRectMake(x,
                                               height+offset+statusBarYOffset,
-                                              CGRectGetWidth(contentFrame)-x-kCRStatusBarViewNoImageRightContentInset,
+                                              width,
                                               subtitleHeight);
     }
     
@@ -271,16 +300,22 @@ static CGFloat CRCenterXForActivityIndicatorWithAlignment(CRToastAccessoryViewAl
         }
     }
     
-    if(self.toast.showHandle){
-        self.handleView.center = (CGPoint) {
-            .x = CGRectGetMidX(self.frame),
-            .y = CGRectGetHeight(self.frame) - preferredPadding - CGRectGetHeight(self.handleView.frame),
-        };
-        self.handleView.hidden = NO;
-    } else {
-        self.handleView.hidden = YES;
-    }
+//    if(self.toast.showHandle){
+//        self.handleView.center = (CGPoint) {
+//            .x = CGRectGetMidX(self.frame),
+//            .y = CGRectGetHeight(self.frame) - preferredPadding - CGRectGetHeight(self.handleView.frame),
+//        };
+//        self.handleView.hidden = NO;
+//    } else {
+//        self.handleView.hidden = YES;
+//    }
     
+}
+
+#pragma mark - User Interactions
+
+- (void)didTapCloseButton:(id)sender {
+    [CRToastManager dismissAllNotifications:YES];
 }
 
 #pragma mark - Overrides

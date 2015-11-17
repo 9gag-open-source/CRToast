@@ -351,6 +351,16 @@ extern NSString *const kCRToastActivityIndicatorViewStyleKey;
 extern NSString *const kCRToastActivityIndicatorAlignmentKey;
 
 /**
+ BOOL setting whether the CRToast should show a handle at the bottom.
+ */
+extern NSString *const kCRToastShowCloseKey;
+
+/**
+ The close button alignment to use. Expects type `CRToastAccessoryViewAlignment`.
+ */
+extern NSString *const kCRToastCloseAlignmentKey;
+
+/**
  An Array of Interaction Responders for the Notification. Expects type `NSArray` full of `CRToastInteractionResponders`
  */
 extern NSString *const kCRToastInteractionRespondersKey;
@@ -374,11 +384,6 @@ extern NSString *const kCRToastIdentifierKey;
  A BOOL setting whether the CRToast's should capture the screen behind the default UIWindow. Expects type `BOOL` defaults to `YES`
  */
 extern NSString *const kCRToastCaptureDefaultWindowKey;
-
-/**
- BOOL setting whether the CRToast should show a handle at the bottom.
- */
-extern NSString *const kCRToastShowHandleKey;
 
 /**
  BOOL setting whether the CRToast should queue up or dispaly immediately.
@@ -462,8 +467,9 @@ extern NSString *const kCRToastQueueToastKey;
 @property (nonatomic, readonly) UIColor *imageTint;
 @property (nonatomic, readonly) UIActivityIndicatorViewStyle activityIndicatorViewStyle;
 @property (nonatomic, readonly) CRToastAccessoryViewAlignment activityViewAlignment;
+@property (nonatomic, readonly) CRToastAccessoryViewAlignment closeAlignment;
 @property (nonatomic, readonly) BOOL showActivityIndicator;
-@property (nonatomic, readonly) BOOL showHandle;
+@property (nonatomic, readonly) BOOL showClose;
 @property (nonatomic, readonly) BOOL queueToast;
 @property (nonatomic, readonly) BOOL forceUserInteraction;
 
