@@ -270,13 +270,13 @@ CRToastAnimationStepBlock CRToastOutwardAnimationsSetupBlock(CRToastManager *wea
 }
 
 - (void)displayNotification:(CRToast*)notification {
-    if (notification.appearance != nil)
-    {
-        notification.appearance();
-    }
     
     if (notification.state == CRToastStateEntering || notification.state == CRToastStateDisplaying || notification.state == CRToastStateExiting){
         return;
+    }
+    
+    if (notification.appearance != nil) {
+        notification.appearance();
     }
     
     _notificationWindow.hidden = NO;
