@@ -154,7 +154,11 @@ CRToastAnimationStepBlock CRToastOutwardAnimationsBlock(CRToastManager *weakSelf
     return ^{
         weakNotification.state = CRToastStateExiting;
         [weakNotification.animator removeAllBehaviors];
-        weakNotification.notificationView.frame = weakNotification.notificationViewAnimationFrame2;
+        CGRect frame = weakNotification.notificationViewAnimationFrame2;
+        if (weakNotification.shouldKeepNavigationBarBorder) {
+            frame.size.height -= 1.0f;
+        }
+        weakNotification.notificationView.frame = frame;
         weakNotification.statusBarView.frame = weakSelf.notificationWindow.rootViewController.view.bounds;
     };
 }
@@ -387,7 +391,6 @@ inwardCompletionAnimationBlock:(CRToastAnimationCompletionBlock)inwardAnimations
 #pragma mark - Overrides
 
 - (BOOL)showingNotification {
-    NSLog(@"self.notifications.count %d", self.notifications.count);
     return self.notifications.count > 0;
 }
 
