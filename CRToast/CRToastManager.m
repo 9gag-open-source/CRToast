@@ -141,9 +141,9 @@ CRToastAnimationCompletionBlock CRToastOutwardAnimationsCompletionBlock(CRToastM
         [weakNotification.notificationView removeFromSuperview];
         [weakNotification.statusBarView removeFromSuperview];
         if (weakSelf.notifications.count > 0) {
-            CRToast *notification = weakSelf.notifications.firstObject;
-            weakSelf.gravityAnimationCompletionBlock = NULL;
-            [weakSelf displayNotification:notification];
+//            CRToast *notification = weakSelf.notifications.firstObject;
+//            weakSelf.gravityAnimationCompletionBlock = NULL;
+//            [weakSelf displayNotification:notification];
         } else {
             weakSelf.notificationWindow.hidden = YES;
         }
@@ -236,10 +236,15 @@ CRToastAnimationStepBlock CRToastOutwardAnimationsSetupBlock(CRToastManager *wea
 }
 
 - (void)dismissAllNotifications:(BOOL)animated {
-    for(CRToast *notificaiton in self.notifications){
-        [self dismissNotification:notificaiton animated:animated];
+    if (_notifications.count == 0) { return; }
+    
+    NSArray *notifications = [_notifications mutableCopy]; //copy to prevent crash: Array was mutated while being enumerated.
+    for(CRToast *notification in notifications) {
+        if (notification.state == CRToastStateDisplaying){
+            [self dismissNotification:notification animated:animated];
+        }
     }
-    [self.notifications removeAllObjects];
+    
 }
 
 //- (void)dismissAllNotificationsWithIdentifier:(NSString *)identifer animated:(BOOL)animated {
